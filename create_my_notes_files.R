@@ -87,3 +87,13 @@ if (!file.exists(paste0(my_dir, names_md[1]))){
   
 }
 
+############################################################
+#                                                          #
+#            to create a issue with checkboxes             #
+#                                                          #
+############################################################
+
+# copy and paste in a new issue on github
+for (i in seq_along(names_md)) {
+  cat(paste("- [ ]", names_md[i] %>% str_remove("\\..+")), "\n")
+}
