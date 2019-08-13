@@ -1,4 +1,4 @@
-# TODO: 05-data-visualization-with-matplotlib_01-matplotlib_concepts_lecture
+# 05-data-visualization-with-matplotlib_01-matplotlib_concepts_lecture
 
 Documentation: https://matplotlib.org/
 
