@@ -14,84 +14,114 @@
 # 
 # ## Plotly Imports
 
-# In[38]:
+# In[1]:
 
 
 import plotly.graph_objs as go 
 from plotly.offline import init_notebook_mode,iplot
-init_notebook_mode(connected=True) 
+init_notebook_mode(connected=True)
+import pandas as pd
 
 
-# ** Import pandas and read the csv file: 2014_World_Power_Consumption**
+# **Import pandas and read the csv file: 2014_World_Power_Consumption**
 
-# In[1]:
-
-
+# In[2]:
 
 
-
-# In[152]:
-
+df = pd.read_csv('2014_World_GDP')
 
 
+# **Check the head of the DataFrame.**
+
+# In[3]:
 
 
-# ** Check the head of the DataFrame. **
-
-# In[156]:
+df.head()
 
 
+# **Referencing the lecture notes, create a Choropleth Plot of the Power Consumption for Countries using the data and layout dictionary.**
+
+# In[4]:
 
 
+data = dict(
+    type = "choropleth",
+    locations = df['CODE'],
+    text = df['COUNTRY'],
+    z = df['GDP (BILLIONS)'],
+    colorbar = {'title': 'GDP in Billions USD'}
+    )
 
-# ** Referencing the lecture notes, create a Choropleth Plot of the Power Consumption for Countries using the data and layout dictionary. **
+layout = dict(
+    title = '2014 Global GDP',
+    geo = dict(
+        showframe = False,
+        # see at: https://plot.ly/python/reference/#layout-geo-projection
+        projection = {'type': 'stereographic'}
+        )
+    )
 
-# In[ ]:
 
-
-
-
-
-# In[ ]:
+# In[5]:
 
 
 choromap = go.Figure(data = [data],layout = layout)
-iplot(choromap,validate=False)
+iplot(choromap, validate=False)
 
 
 # ## USA Choropleth
 # 
-# ** Import the 2012_Election_Data csv file using pandas. **
+# **Import the 2012_Election_Data csv file using pandas.**
 
-# In[109]:
-
-
+# In[6]:
 
 
-
-# ** Check the head of the DataFrame. **
-
-# In[110]:
+df = pd.read_csv('2012_Election_Data')
 
 
+# **Check the head of the DataFrame.**
+
+# In[7]:
 
 
-
-# ** Now create a plot that displays the Voting-Age Population (VAP) per state. If you later want to play around with other columns, make sure you consider their data type. VAP has already been transformed to a float for you. **
-
-# In[120]:
+df.head()
 
 
+# **Now create a plot that displays the Voting-Age Population (VAP) per state. If you later want to play around with other columns, make sure you consider their data type. VAP has already been transformed to a float for you.**
+
+# In[20]:
 
 
+data = dict(
+    type='choropleth',
+    colorscale = 'Viridis',
+    reversescale = True,
+    locations = df['State Abv'],
+    z = df['Voting-Age Population (VAP)'],
+    locationmode = 'USA-states',
+    text = df['State'],
+    marker = dict(
+        line = dict(
+            color = 'rgb(255,255,255)',
+            width = 1
+        )
+    ),
+    colorbar = {
+        'title':"Voting-Age Population (VAP)"
+    }
+) 
 
-# In[121]:
+layout = dict(
+    title = '2012 General Election Voting Data',
+    geo = dict(
+        scope='usa',
+        showlakes = True,
+        lakecolor = 'rgb(85,173,240)'
+    )
+)
 
 
-
-
-
-# In[ ]:
+# In[21]:
 
 
 choromap = go.Figure(data = [data],layout = layout)
