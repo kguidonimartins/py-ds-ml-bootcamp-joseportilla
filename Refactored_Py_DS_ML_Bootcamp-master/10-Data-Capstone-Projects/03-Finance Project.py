@@ -10,7 +10,7 @@
 # 
 # In this data project we will focus on exploratory data analysis of stock prices. Keep in mind, this project is just meant to practice your visualization and pandas skills, it is not meant to be a robust financial analysis or be taken as financial advice.
 # ____
-# ** NOTE: This project is extremely challenging because it will introduce a lot of new concepts and have you looking things up on your own (we'll point you in the right direction) to try to solve the tasks issued. Feel free to just go through the solutions lecture notebook and video as a "walkthrough" project if you don't want to have to look things up yourself. You'll still learn a lot that way! **
+# **NOTE: This project is extremely challenging because it will introduce a lot of new concepts and have you looking things up on your own (we'll point you in the right direction) to try to solve the tasks issued. Feel free to just go through the solutions lecture notebook and video as a "walkthrough" project if you don't want to have to look things up yourself. You'll still learn a lot that way!**
 # ____
 # We'll focus on bank stocks and see how they progressed throughout the [financial crisis](https://en.wikipedia.org/wiki/Financial_crisis_of_2007%E2%80%9308) all the way to early 2016.
 
@@ -26,7 +26,7 @@
 # 
 # Already filled out for you.
 
-# In[4]:
+# In[1]:
 
 
 from pandas_datareader import data, wb
@@ -46,12 +46,12 @@ get_ipython().run_line_magic('matplotlib', 'inline')
 # * Morgan Stanley
 # * Wells Fargo
 # 
-# ** Figure out how to get the stock data from Jan 1st 2006 to Jan 1st 2016 for each of these banks. Set each bank to be a separate dataframe, with the variable name for that bank being its ticker symbol. This will involve a few steps:**
+# **Figure out how to get the stock data from Jan 1st 2006 to Jan 1st 2016 for each of these banks. Set each bank to be a separate dataframe, with the variable name for that bank being its ticker symbol. This will involve a few steps:**
 # 1. Use datetime to set start and end datetime objects.
 # 2. Figure out the ticker symbol for each bank.
 # 2. Figure out how to use datareader to grab info on the stock.
 # 
-# ** Use [this documentation page](https://pandas-datareader.readthedocs.io/en/latest/remote_data.html) for hints and instructions (it should just be a matter of replacing certain values. Use google finance as a source, for example:**
+# **Use [this documentation page](https://pandas-datareader.readthedocs.io/en/latest/remote_data.html) for hints and instructions (it should just be a matter of replacing certain values. Use google finance as a source, for example:**
 #     
 #     # Bank of America
 #     BAC = data.DataReader("BAC", 'google', start, end)
@@ -60,16 +60,19 @@ get_ipython().run_line_magic('matplotlib', 'inline')
 # ------------
 # ### We also provide pickle file in the article lecture right before the video lectures.
 
+# In[2]:
+
+
+start = datetime.datetime(2006, 1, 1)
+end = datetime.datetime(2016, 1, 1)
+data.DataReader('BAC', 'google', start, end)
+
+
 # In[5]:
 
 
-
-
-
-# In[6]:
-
-
-
+df = pd.read_pickle('all_banks')
+df.head()
 
 
 # In[50]:
@@ -78,7 +81,7 @@ get_ipython().run_line_magic('matplotlib', 'inline')
 
 
 
-# ** Create a list of the ticker symbols (as strings) in alphabetical order. Call this list: tickers**
+# **Create a list of the ticker symbols (as strings) in alphabetical order. Call this list: tickers**
 
 # In[7]:
 
@@ -86,7 +89,7 @@ get_ipython().run_line_magic('matplotlib', 'inline')
 
 
 
-# ** Use pd.concat to concatenate the bank dataframes together to a single data frame called bank_stocks. Set the keys argument equal to the tickers list. Also pay attention to what axis you concatenate on.**
+# **Use pd.concat to concatenate the bank dataframes together to a single data frame called bank_stocks. Set the keys argument equal to the tickers list. Also pay attention to what axis you concatenate on.**
 
 # In[8]:
 
@@ -94,7 +97,7 @@ get_ipython().run_line_magic('matplotlib', 'inline')
 
 
 
-# ** Set the column name levels (this is filled out for you):**
+# **Set the column name levels (this is filled out for you):**
 
 # In[9]:
 
@@ -102,7 +105,7 @@ get_ipython().run_line_magic('matplotlib', 'inline')
 bank_stocks.columns.names = ['Bank Ticker','Stock Info']
 
 
-# ** Check the head of the bank_stocks dataframe.**
+# **Check the head of the bank_stocks dataframe.**
 
 # In[20]:
 
@@ -115,7 +118,13 @@ bank_stocks.columns.names = ['Bank Ticker','Stock Info']
 # Let's explore the data a bit! Before continuing, I encourage you to check out the documentation on [Multi-Level Indexing](http://pandas.pydata.org/pandas-docs/stable/advanced.html) and [Using .xs](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.xs.html).
 # Reference the solutions if you can not figure out how to use .xs(), since that will be a major part of this project.
 # 
-# ** What is the max Close price for each bank's stock throughout the time period?**
+# **What is the max Close price for each bank's stock throughout the time period?**
+
+# In[ ]:
+
+
+
+
 
 # In[58]:
 

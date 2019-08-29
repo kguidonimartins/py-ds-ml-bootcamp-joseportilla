@@ -8,7 +8,7 @@ ___
 
 In this data project we will focus on exploratory data analysis of stock prices. Keep in mind, this project is just meant to practice your visualization and pandas skills, it is not meant to be a robust financial analysis or be taken as financial advice.
 ____
-** NOTE: This project is extremely challenging because it will introduce a lot of new concepts and have you looking things up on your own (we'll point you in the right direction) to try to solve the tasks issued. Feel free to just go through the solutions lecture notebook and video as a "walkthrough" project if you don't want to have to look things up yourself. You'll still learn a lot that way! **
+**NOTE: This project is extremely challenging because it will introduce a lot of new concepts and have you looking things up on your own (we'll point you in the right direction) to try to solve the tasks issued. Feel free to just go through the solutions lecture notebook and video as a "walkthrough" project if you don't want to have to look things up yourself. You'll still learn a lot that way!**
 ____
 We'll focus on bank stocks and see how they progressed throughout the [financial crisis](https://en.wikipedia.org/wiki/Financial_crisis_of_2007%E2%80%9308) all the way to early 2016.
 
@@ -43,12 +43,12 @@ We need to get data using pandas datareader. We will get stock information for t
 * Morgan Stanley
 * Wells Fargo
 
-** Figure out how to get the stock data from Jan 1st 2006 to Jan 1st 2016 for each of these banks. Set each bank to be a separate dataframe, with the variable name for that bank being its ticker symbol. This will involve a few steps:**
+**Figure out how to get the stock data from Jan 1st 2006 to Jan 1st 2016 for each of these banks. Set each bank to be a separate dataframe, with the variable name for that bank being its ticker symbol. This will involve a few steps:**
 1. Use datetime to set start and end datetime objects.
 2. Figure out the ticker symbol for each bank.
 2. Figure out how to use datareader to grab info on the stock.
 
-** Use [this documentation page](https://pandas-datareader.readthedocs.io/en/latest/remote_data.html) for hints and instructions (it should just be a matter of replacing certain values. Use google finance as a source, for example:**
+**Use [this documentation page](https://pandas-datareader.readthedocs.io/en/latest/remote_data.html) for hints and instructions (it should just be a matter of replacing certain values. Use google finance as a source, for example:**
     
     # Bank of America
     BAC = data.DataReader("BAC", 'google', start, end)
@@ -59,41 +59,288 @@ We need to get data using pandas datareader. We will get stock information for t
 
 
 ```python
-
+start = datetime.datetime(2006, 1, 1)
+end = datetime.datetime(2016, 1, 1)
+data.DataReader('BAC', 'google', start, end)
 ```
+
+
+    ---------------------------------------------------------------------------
+
+    ImmediateDeprecationError                 Traceback (most recent call last)
+
+    <ipython-input-2-0504cfd206ea> in <module>
+          1 start = datetime.datetime(2006, 1, 1)
+          2 end = datetime.datetime(2016, 1, 1)
+    ----> 3 data.DataReader('BAC', 'google', start, end)
+    
+
+    ~/anaconda3/lib/python3.7/site-packages/pandas_datareader/data.py in DataReader(name, data_source, start, end, retry_count, pause, session, access_key)
+        314                                  chunksize=25,
+        315                                  retry_count=retry_count, pause=pause,
+    --> 316                                  session=session).read()
+        317 
+        318     elif data_source == "iex":
+
+
+    ~/anaconda3/lib/python3.7/site-packages/pandas_datareader/google/daily.py in __init__(self, symbols, start, end, retry_count, pause, session, chunksize)
+         34     def __init__(self, symbols=None, start=None, end=None, retry_count=3,
+         35                  pause=0.1, session=None, chunksize=25):
+    ---> 36         raise ImmediateDeprecationError(DEP_ERROR_MSG.format('Google finance'))
+         37         super(GoogleDailyReader, self).__init__(symbols, start, end,
+         38                                                 retry_count, pause, session,
+
+
+    ImmediateDeprecationError: 
+    Google finance has been immediately deprecated due to large breaks in the API without the
+    introduction of a stable replacement. Pull Requests to re-enable these data
+    connectors are welcome.
+    
+    See https://github.com/pydata/pandas-datareader/issues
+
+
+
+
+```python
+df = pd.read_pickle('all_banks')
+df.head()
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+
+    .dataframe thead tr:last-of-type th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th>Bank Ticker</th>
+      <th colspan="5" halign="left">BAC</th>
+      <th colspan="5" halign="left">C</th>
+      <th>...</th>
+      <th colspan="5" halign="left">MS</th>
+      <th colspan="5" halign="left">WFC</th>
+    </tr>
+    <tr>
+      <th>Stock Info</th>
+      <th>Open</th>
+      <th>High</th>
+      <th>Low</th>
+      <th>Close</th>
+      <th>Volume</th>
+      <th>Open</th>
+      <th>High</th>
+      <th>Low</th>
+      <th>Close</th>
+      <th>Volume</th>
+      <th>...</th>
+      <th>Open</th>
+      <th>High</th>
+      <th>Low</th>
+      <th>Close</th>
+      <th>Volume</th>
+      <th>Open</th>
+      <th>High</th>
+      <th>Low</th>
+      <th>Close</th>
+      <th>Volume</th>
+    </tr>
+    <tr>
+      <th>Date</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2006-01-03</th>
+      <td>46.92</td>
+      <td>47.18</td>
+      <td>46.15</td>
+      <td>47.08</td>
+      <td>16296700</td>
+      <td>490.0</td>
+      <td>493.8</td>
+      <td>481.1</td>
+      <td>492.9</td>
+      <td>1537660</td>
+      <td>...</td>
+      <td>57.17</td>
+      <td>58.49</td>
+      <td>56.74</td>
+      <td>58.31</td>
+      <td>5377000</td>
+      <td>31.60</td>
+      <td>31.98</td>
+      <td>31.20</td>
+      <td>31.90</td>
+      <td>11016400</td>
+    </tr>
+    <tr>
+      <th>2006-01-04</th>
+      <td>47.00</td>
+      <td>47.24</td>
+      <td>46.45</td>
+      <td>46.58</td>
+      <td>17757900</td>
+      <td>488.6</td>
+      <td>491.0</td>
+      <td>483.5</td>
+      <td>483.8</td>
+      <td>1871020</td>
+      <td>...</td>
+      <td>58.70</td>
+      <td>59.28</td>
+      <td>58.35</td>
+      <td>58.35</td>
+      <td>7977800</td>
+      <td>31.80</td>
+      <td>31.82</td>
+      <td>31.36</td>
+      <td>31.53</td>
+      <td>10871000</td>
+    </tr>
+    <tr>
+      <th>2006-01-05</th>
+      <td>46.58</td>
+      <td>46.83</td>
+      <td>46.32</td>
+      <td>46.64</td>
+      <td>14970900</td>
+      <td>484.4</td>
+      <td>487.8</td>
+      <td>484.0</td>
+      <td>486.2</td>
+      <td>1143160</td>
+      <td>...</td>
+      <td>58.55</td>
+      <td>58.59</td>
+      <td>58.02</td>
+      <td>58.51</td>
+      <td>5778000</td>
+      <td>31.50</td>
+      <td>31.56</td>
+      <td>31.31</td>
+      <td>31.50</td>
+      <td>10158000</td>
+    </tr>
+    <tr>
+      <th>2006-01-06</th>
+      <td>46.80</td>
+      <td>46.91</td>
+      <td>46.35</td>
+      <td>46.57</td>
+      <td>12599800</td>
+      <td>488.8</td>
+      <td>489.0</td>
+      <td>482.0</td>
+      <td>486.2</td>
+      <td>1370250</td>
+      <td>...</td>
+      <td>58.77</td>
+      <td>58.85</td>
+      <td>58.05</td>
+      <td>58.57</td>
+      <td>6889800</td>
+      <td>31.58</td>
+      <td>31.78</td>
+      <td>31.38</td>
+      <td>31.68</td>
+      <td>8403800</td>
+    </tr>
+    <tr>
+      <th>2006-01-09</th>
+      <td>46.72</td>
+      <td>46.97</td>
+      <td>46.36</td>
+      <td>46.60</td>
+      <td>15620000</td>
+      <td>486.0</td>
+      <td>487.4</td>
+      <td>483.0</td>
+      <td>483.9</td>
+      <td>1680740</td>
+      <td>...</td>
+      <td>58.63</td>
+      <td>59.29</td>
+      <td>58.62</td>
+      <td>59.19</td>
+      <td>4144500</td>
+      <td>31.68</td>
+      <td>31.82</td>
+      <td>31.56</td>
+      <td>31.68</td>
+      <td>5619600</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 30 columns</p>
+</div>
+
+
 
 
 ```python
 
 ```
 
-
-```python
-
-```
-
-** Create a list of the ticker symbols (as strings) in alphabetical order. Call this list: tickers**
+**Create a list of the ticker symbols (as strings) in alphabetical order. Call this list: tickers**
 
 
 ```python
 
 ```
 
-** Use pd.concat to concatenate the bank dataframes together to a single data frame called bank_stocks. Set the keys argument equal to the tickers list. Also pay attention to what axis you concatenate on.**
+**Use pd.concat to concatenate the bank dataframes together to a single data frame called bank_stocks. Set the keys argument equal to the tickers list. Also pay attention to what axis you concatenate on.**
 
 
 ```python
 
 ```
 
-** Set the column name levels (this is filled out for you):**
+**Set the column name levels (this is filled out for you):**
 
 
 ```python
 bank_stocks.columns.names = ['Bank Ticker','Stock Info']
 ```
 
-** Check the head of the bank_stocks dataframe.**
+**Check the head of the bank_stocks dataframe.**
 
 
 ```python
@@ -296,7 +543,12 @@ bank_stocks.columns.names = ['Bank Ticker','Stock Info']
 Let's explore the data a bit! Before continuing, I encourage you to check out the documentation on [Multi-Level Indexing](http://pandas.pydata.org/pandas-docs/stable/advanced.html) and [Using .xs](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.xs.html).
 Reference the solutions if you can not figure out how to use .xs(), since that will be a major part of this project.
 
-** What is the max Close price for each bank's stock throughout the time period?**
+**What is the max Close price for each bank's stock throughout the time period?**
+
+
+```python
+
+```
 
 
 ```python
@@ -425,7 +677,7 @@ $$r_t = \frac{p_t - p_{t-1}}{p_{t-1}} = \frac{p_t}{p_{t-1}} - 1$$
 
 
 
-![png](03-Finance%20Project_files/03-Finance%20Project_23_1.png)
+![png](03-Finance%20Project_files/03-Finance%20Project_24_1.png)
 
 
 * See solution for details about Citigroup behavior....
@@ -531,7 +783,7 @@ $$r_t = \frac{p_t - p_{t-1}}{p_{t-1}} = \frac{p_t}{p_{t-1}} - 1$$
 
 
 
-![png](03-Finance%20Project_files/03-Finance%20Project_34_2.png)
+![png](03-Finance%20Project_files/03-Finance%20Project_35_2.png)
 
 
 ** Create a distplot using seaborn of the 2008 returns for CitiGroup **
@@ -555,7 +807,7 @@ $$r_t = \frac{p_t - p_{t-1}}{p_{t-1}} = \frac{p_t}{p_{t-1}} - 1$$
 
 
 
-![png](03-Finance%20Project_files/03-Finance%20Project_36_2.png)
+![png](03-Finance%20Project_files/03-Finance%20Project_37_2.png)
 
 
 ____
@@ -655,7 +907,7 @@ e.exports=function(t,e,r,o){function a(t,e){g.push(t._hovertitle+": "+i.tickText
 
 
 
-![png](03-Finance%20Project_files/03-Finance%20Project_40_1.png)
+![png](03-Finance%20Project_files/03-Finance%20Project_41_1.png)
 
 
 
@@ -671,7 +923,7 @@ e.exports=function(t,e,r,o){function a(t,e){g.push(t._hovertitle+": "+i.tickText
 
 
 
-![png](03-Finance%20Project_files/03-Finance%20Project_41_1.png)
+![png](03-Finance%20Project_files/03-Finance%20Project_42_1.png)
 
 
 
@@ -702,7 +954,7 @@ Let's analyze the moving averages for these stocks in the year 2008.
 
 
 
-![png](03-Finance%20Project_files/03-Finance%20Project_44_1.png)
+![png](03-Finance%20Project_files/03-Finance%20Project_45_1.png)
 
 
 ** Create a heatmap of the correlation between the stocks Close Price.**
@@ -720,7 +972,7 @@ Let's analyze the moving averages for these stocks in the year 2008.
 
 
 
-![png](03-Finance%20Project_files/03-Finance%20Project_46_1.png)
+![png](03-Finance%20Project_files/03-Finance%20Project_47_1.png)
 
 
 ** Optional: Use seaborn's clustermap to cluster the correlations together:**
@@ -738,7 +990,7 @@ Let's analyze the moving averages for these stocks in the year 2008.
 
 
 
-![png](03-Finance%20Project_files/03-Finance%20Project_48_1.png)
+![png](03-Finance%20Project_files/03-Finance%20Project_49_1.png)
 
 
 
