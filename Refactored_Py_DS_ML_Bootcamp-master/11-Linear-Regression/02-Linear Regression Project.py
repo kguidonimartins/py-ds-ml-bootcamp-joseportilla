@@ -424,11 +424,9 @@ df_coef.sort_values(
 
 # 'Length of Membership' has the highest effect on the 'Yearly Amount Spent', followed by the 'Time on App', and the 'Avg. Session Length'. 'Time on website' has the lowest effect on the 'Yearly Amount Spent'. 
 # 
-# 
-# 
-# <h4 style="background-color: rgb(255, 236, 139);">
-# TODO: Test interactions among the features.
-# </h4>
+# <!-- 
+# TODO: Test interactions among the features. 
+# -->
 
 # **Do you think the company should focus more on their mobile app or on their website?**
 
