@@ -12,43 +12,68 @@ Welcome to the KNN Project! This will be a simple project very similar to the le
 
 
 ```python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+%matplotlib inline
 
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import classification_report, confusion_matrix
 ```
 
 ## Get the Data
-** Read the 'KNN_Project_Data csv file into a dataframe **
+
+**Read the 'KNN_Project_Data csv file into a dataframe**
 
 
 ```python
-
+df = pd.read_csv('KNN_Project_Data')
+df.columns = map(str.lower, df.columns)
+df.columns = df.columns.str.replace(" ", "_")
 ```
 
 **Check the head of the dataframe.**
 
 
 ```python
-
+df.head()
 ```
 
 
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>XVPM</th>
-      <th>GWYH</th>
-      <th>TRAT</th>
-      <th>TLLZ</th>
-      <th>IGGA</th>
-      <th>HYKR</th>
-      <th>EDFS</th>
-      <th>GUUB</th>
-      <th>MGJM</th>
-      <th>JHZC</th>
-      <th>TARGET CLASS</th>
+      <th>xvpm</th>
+      <th>gwyh</th>
+      <th>trat</th>
+      <th>tllz</th>
+      <th>igga</th>
+      <th>hykr</th>
+      <th>edfs</th>
+      <th>guub</th>
+      <th>mgjm</th>
+      <th>jhzc</th>
+      <th>target_class</th>
     </tr>
   </thead>
   <tbody>
@@ -128,6 +153,11 @@ Welcome to the KNN Project! This will be a simple project very similar to the le
 
 
 
+
+```python
+
+```
+
 # EDA
 
 Since this data is artificial, we'll just do a large pairplot with seaborn.
@@ -136,43 +166,63 @@ Since this data is artificial, we'll just do a large pairplot with seaborn.
 
 
 ```python
-
+sns.pairplot(df, hue='target_class')
 ```
 
+    /home/karlo/anaconda3/lib/python3.7/site-packages/scipy/stats/stats.py:1713: FutureWarning: Using a non-tuple sequence for multidimensional indexing is deprecated; use `arr[tuple(seq)]` instead of `arr[seq]`. In the future this will be interpreted as an array index, `arr[np.array(seq)]`, which will result either in an error or a different result.
+      return np.add.reduce(sorted[indexer] * weights, axis=axis) / sumval
+    /home/karlo/anaconda3/lib/python3.7/site-packages/statsmodels/nonparametric/kde.py:488: RuntimeWarning: invalid value encountered in true_divide
+      binned = fast_linbin(X, a, b, gridsize) / (delta * nobs)
+    /home/karlo/anaconda3/lib/python3.7/site-packages/statsmodels/nonparametric/kdetools.py:34: RuntimeWarning: invalid value encountered in double_scalars
+      FAC1 = 2*(np.pi*bw/RANGE)**2
+    /home/karlo/anaconda3/lib/python3.7/site-packages/numpy/core/fromnumeric.py:83: RuntimeWarning: invalid value encountered in reduce
+      return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
 
 
 
-    <seaborn.axisgrid.PairGrid at 0x1197505f8>
+
+
+    <seaborn.axisgrid.PairGrid at 0x7f97ca1ea7b8>
 
 
 
 
-![png](02-K%20Nearest%20Neighbors%20Project_files/02-K%20Nearest%20Neighbors%20Project_8_1.png)
+![png](02-K%20Nearest%20Neighbors%20Project_files/02-K%20Nearest%20Neighbors%20Project_9_2.png)
 
+
+
+```python
+
+```
 
 # Standardize the Variables
 
 Time to standardize the variables.
 
-** Import StandardScaler from Scikit learn.**
+**Import StandardScaler from Scikit learn.**
 
 
 ```python
 
 ```
 
-** Create a StandardScaler() object called scaler.**
+**Create a StandardScaler() object called scaler.**
+
+
+```python
+scaler = StandardScaler()
+```
 
 
 ```python
 
 ```
 
-** Fit scaler to the features.**
+**Fit scaler to the features.**
 
 
 ```python
-
+scaler.fit(df.drop('target_class', axis=1))
 ```
 
 
@@ -182,7 +232,37 @@ Time to standardize the variables.
 
 
 
+
+```python
+
+```
+
 **Use the .transform() method to transform the features to a scaled version.**
+
+
+```python
+scaled_features = scaler.transform(df.drop('target_class', axis=1))
+scaled_features
+```
+
+
+
+
+    array([[ 1.56852168, -0.44343461,  1.61980773, ..., -0.93279392,
+             1.00831307, -1.06962723],
+           [-0.11237594, -1.05657361,  1.7419175 , ..., -0.46186435,
+             0.25832069, -1.04154625],
+           [ 0.66064691, -0.43698145,  0.77579285, ...,  1.14929806,
+             2.1847836 ,  0.34281129],
+           ...,
+           [-0.35889496, -0.97901454,  0.83771499, ..., -1.51472604,
+            -0.27512225,  0.86428656],
+           [ 0.27507999, -0.99239881,  0.0303711 , ..., -0.03623294,
+             0.43668516, -0.21245586],
+           [ 0.62589594,  0.79510909,  1.12180047, ..., -1.25156478,
+            -0.60352946, -0.87985868]])
+
+
 
 
 ```python
@@ -193,27 +273,41 @@ Time to standardize the variables.
 
 
 ```python
-
+df_feat = pd.DataFrame(scaled_features, columns=df.columns[:-1])
+df_feat.head()
 ```
 
 
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>XVPM</th>
-      <th>GWYH</th>
-      <th>TRAT</th>
-      <th>TLLZ</th>
-      <th>IGGA</th>
-      <th>HYKR</th>
-      <th>EDFS</th>
-      <th>GUUB</th>
-      <th>MGJM</th>
-      <th>JHZC</th>
+      <th>xvpm</th>
+      <th>gwyh</th>
+      <th>trat</th>
+      <th>tllz</th>
+      <th>igga</th>
+      <th>hykr</th>
+      <th>edfs</th>
+      <th>guub</th>
+      <th>mgjm</th>
+      <th>jhzc</th>
     </tr>
   </thead>
   <tbody>
@@ -288,9 +382,67 @@ Time to standardize the variables.
 
 
 
+
+```python
+# check mean
+df_feat.mean().round()
+```
+
+
+
+
+    xvpm    0.0
+    gwyh    0.0
+    trat    0.0
+    tllz    0.0
+    igga   -0.0
+    hykr   -0.0
+    edfs   -0.0
+    guub   -0.0
+    mgjm   -0.0
+    jhzc    0.0
+    dtype: float64
+
+
+
+
+```python
+# check sd
+df_feat.std().round()
+```
+
+
+
+
+    xvpm    1.0
+    gwyh    1.0
+    trat    1.0
+    tllz    1.0
+    igga    1.0
+    hykr    1.0
+    edfs    1.0
+    guub    1.0
+    mgjm    1.0
+    jhzc    1.0
+    dtype: float64
+
+
+
+
+```python
+
+```
+
 # Train Test Split
 
 **Use train_test_split to split your data into a training set and a testing set.**
+
+
+```python
+X = df_feat
+y = df['target_class']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30)
+```
 
 
 ```python
@@ -315,6 +467,11 @@ Time to standardize the variables.
 
 
 ```python
+knn = KNeighborsClassifier(n_neighbors=1)
+```
+
+
+```python
 
 ```
 
@@ -322,17 +479,22 @@ Time to standardize the variables.
 
 
 ```python
-
+knn.fit(X_train, y_train)
 ```
 
 
 
 
     KNeighborsClassifier(algorithm='auto', leaf_size=30, metric='minkowski',
-               metric_params=None, n_jobs=1, n_neighbors=1, p=2,
+               metric_params=None, n_jobs=None, n_neighbors=1, p=2,
                weights='uniform')
 
 
+
+
+```python
+
+```
 
 # Predictions and Evaluations
 Let's evaluate our KNN model!
@@ -341,10 +503,24 @@ Let's evaluate our KNN model!
 
 
 ```python
+pred = knn.predict(X_test)
+```
+
+
+```python
 
 ```
 
-** Create a confusion matrix and classification report.**
+**Create a confusion matrix and classification report.**
+
+
+```python
+print(confusion_matrix(y_test, pred))
+```
+
+    [[105  58]
+     [ 35 102]]
+
 
 
 ```python
@@ -356,28 +532,42 @@ Let's evaluate our KNN model!
 
 ```
 
-    [[112  40]
-     [ 34 114]]
+
+```python
+print(classification_report(y_test, pred))
+```
+
+                  precision    recall  f1-score   support
+    
+               0       0.75      0.64      0.69       163
+               1       0.64      0.74      0.69       137
+    
+       micro avg       0.69      0.69      0.69       300
+       macro avg       0.69      0.69      0.69       300
+    weighted avg       0.70      0.69      0.69       300
+    
 
 
 
 ```python
 
 ```
-
-                 precision    recall  f1-score   support
-    
-              0       0.77      0.74      0.75       152
-              1       0.74      0.77      0.75       148
-    
-    avg / total       0.75      0.75      0.75       300
-    
-
 
 # Choosing a K Value
 Let's go ahead and use the elbow method to pick a good K Value!
 
-** Create a for loop that trains various KNN models with different k values, then keep track of the error_rate for each of these models with a list. Refer to the lecture if you are confused on this step.**
+**Create a for loop that trains various KNN models with different k values, then keep track of the error_rate for each of these models with a list. Refer to the lecture if you are confused on this step.**
+
+
+```python
+error_rate = []
+
+for i in range(1, 40):
+    knn = KNeighborsClassifier(n_neighbors=i)
+    knn.fit(X_train, y_train)
+    pred_i = knn.predict(X_test)
+    error_rate.append(np.mean(pred_i != y_test))    
+```
 
 
 ```python
@@ -388,19 +578,28 @@ Let's go ahead and use the elbow method to pick a good K Value!
 
 
 ```python
-
+plt.figure(figsize=(10, 6))
+plt.plot(range(1, 40), error_rate, color='blue', linestyle='dashed', marker='o', markerfacecolor='red', markersize=10)
+plt.title('Error rate vs K value')
+plt.xlabel('K')
+plt.ylabel('Error rate')
 ```
 
 
 
 
-    <matplotlib.text.Text at 0x11cbdb710>
+    Text(0, 0.5, 'Error rate')
 
 
 
 
-![png](02-K%20Nearest%20Neighbors%20Project_files/02-K%20Nearest%20Neighbors%20Project_38_1.png)
+![png](02-K%20Nearest%20Neighbors%20Project_files/02-K%20Nearest%20Neighbors%20Project_53_1.png)
 
+
+
+```python
+
+```
 
 ## Retrain with new K Value
 
@@ -408,23 +607,31 @@ Let's go ahead and use the elbow method to pick a good K Value!
 
 
 ```python
+knn = KNeighborsClassifier(n_neighbors=26)
+knn.fit(X_train, y_train)
 
+pred = knn.predict(X_test)
+
+print(confusion_matrix(y_test, pred))
+print(classification_report(y_test, pred))
 ```
 
-    WITH K=30
+    [[133  30]
+     [ 18 119]]
+                  precision    recall  f1-score   support
     
+               0       0.88      0.82      0.85       163
+               1       0.80      0.87      0.83       137
     
-    [[127  25]
-     [ 23 125]]
-    
-    
-                 precision    recall  f1-score   support
-    
-              0       0.85      0.84      0.84       152
-              1       0.83      0.84      0.84       148
-    
-    avg / total       0.84      0.84      0.84       300
+       micro avg       0.84      0.84      0.84       300
+       macro avg       0.84      0.84      0.84       300
+    weighted avg       0.84      0.84      0.84       300
     
 
+
+
+```python
+
+```
 
 # Great Job!
