@@ -14,7 +14,7 @@ K-Nearest Neighbors offers two type of modeling data:
 It has two types of parameters:
 
 - *k*: the number of the neighbors points to predict/classify a new data point
-- *Distance metric*: what type of the distance (euclidean or not) to use to predict/classify a new data point
+- *Distance metric*: what type of distance (euclidean or not) to use to predict/classify a new data point
 
 ### Pros
 
@@ -60,7 +60,7 @@ df.columns = df.columns.str.replace(' ', '_')
 df.head()
 ```
 
-Preprocessing data
+Preprocess data
 
 > Because KNN predict/classify data by proximity, scaled data matters!
 
@@ -87,7 +87,7 @@ y = df['target_class']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=101)
 ```
 
-Training data
+Train data
 
 ```python
 # KNeighborsClassifier(
@@ -106,13 +106,13 @@ knn = KNeighborsClassifier(n_neighbors=1)
 knn.fit(X_train, y_train)
 ```
 
-Predicting
+Predict
 
 ```python
 pred = knn.predict(X_test)
 ```
 
-Evaluating
+Evaluate
 
 ```python
 print(confusion_matrix(y_test, pred))
@@ -120,7 +120,7 @@ print(confusion_matrix(y_test, pred))
 print(classification_report(y_test, pred))
 ```
 
-Using elbow method to choose the better *k* parameters
+Using the elbow method to choose the better *k* parameters
 
 ```python
 error_rate = []
