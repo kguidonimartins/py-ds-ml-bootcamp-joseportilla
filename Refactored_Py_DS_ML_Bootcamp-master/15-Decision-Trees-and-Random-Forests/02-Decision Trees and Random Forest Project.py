@@ -32,23 +32,37 @@
 # 
 # **Import the usual libraries for pandas and plotting. You can import sklearn later on.**
 
-# In[2]:
+# In[1]:
 
 
-
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+get_ipython().run_line_magic('matplotlib', 'inline')
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.ensemble import RandomForestClassifier
 
 
 # ## Get the Data
 # 
-# ** Use pandas to read loan_data.csv as a dataframe called loans.**
+# **Use pandas to read loan_data.csv as a dataframe called loans.**
+
+# In[2]:
+
+
+df = pd.read_csv('loan_data.csv')
+
+
+# **Check out the info(), head(), and describe() methods on loans.**
 
 # In[3]:
 
 
+df.info()
 
-
-
-# ** Check out the info(), head(), and describe() methods on loans.**
 
 # In[4]:
 
@@ -59,7 +73,19 @@
 # In[5]:
 
 
+df.describe()
 
+
+# In[5]:
+
+
+
+
+
+# In[6]:
+
+
+df.head()
 
 
 # In[6]:
@@ -72,9 +98,21 @@
 # 
 # Let's do some data visualization! We'll use seaborn and pandas built-in plotting capabilities, but feel free to use whatever library you want. Don't worry about the colors matching, just worry about getting the main idea of the plot.
 # 
-# ** Create a histogram of two FICO distributions on top of each other, one for each credit.policy outcome.**
+# **Create a histogram of two FICO distributions on top of each other, one for each credit.policy outcome.**
 # 
 # *Note: This is pretty tricky, feel free to reference the solutions. You'll probably need one line of code for each histogram, I also recommend just using pandas built in .hist()*
+
+# In[14]:
+
+
+plt.figure(figsize=(10,6))
+df[df['credit.policy']==1]['fico'].hist(alpha=0.5,color='blue',
+                                              bins=30,label='Credit.Policy=1')
+df[df['credit.policy']==0]['fico'].hist(alpha=0.5,color='red',
+                                              bins=30,label='Credit.Policy=0')
+plt.legend()
+plt.xlabel('FICO')
+
 
 # In[7]:
 
@@ -82,7 +120,19 @@
 
 
 
-# ** Create a similar figure, except this time select by the not.fully.paid column.**
+# **Create a similar figure, except this time select by the not.fully.paid column.**
+
+# In[15]:
+
+
+plt.figure(figsize=(10,6))
+df[df['not.fully.paid']==1]['fico'].hist(alpha=0.5,color='blue',
+                                              bins=30,label='not.fully.paid=1')
+df[df['not.fully.paid']==0]['fico'].hist(alpha=0.5,color='red',
+                                              bins=30,label='not.fully.paid=0')
+plt.legend()
+plt.xlabel('FICO')
+
 
 # In[8]:
 
@@ -90,7 +140,14 @@
 
 
 
-# ** Create a countplot using seaborn showing the counts of loans by purpose, with the color hue defined by not.fully.paid. **
+# **Create a countplot using seaborn showing the counts of loans by purpose, with the color hue defined by not.fully.paid.**
+
+# In[20]:
+
+
+plt.figure(figsize=(12,8))
+sns.countplot(x='purpose', data=df, hue='not.fully.paid')
+
 
 # In[9]:
 
@@ -98,7 +155,13 @@
 
 
 
-# ** Let's see the trend between FICO score and interest rate. Recreate the following jointplot.**
+# **Let's see the trend between FICO score and interest rate. Recreate the following jointplot.**
+
+# In[26]:
+
+
+sns.jointplot(x='fico', y='int.rate', data=df, alpha=.1, color='black')
+
 
 # In[10]:
 
@@ -106,7 +169,19 @@
 
 
 
-# ** Create the following lmplots to see if the trend differed between not.fully.paid and credit.policy. Check the documentation for lmplot() if you can't figure out how to separate it into columns.**
+# **Create the following lmplots to see if the trend differed between not.fully.paid and credit.policy. Check the documentation for lmplot() if you can't figure out how to separate it into columns.**
+
+# In[28]:
+
+
+sns.lmplot(x='fico', y='int.rate', data=df, hue='not.fully.paid')
+
+
+# In[31]:
+
+
+sns.lmplot(x='fico', y='int.rate', data=df, col='not.fully.paid')
+
 
 # In[11]:
 
@@ -119,6 +194,12 @@
 # Let's get ready to set up our data for our Random Forest Classification Model!
 # 
 # **Check loans.info() again.**
+
+# In[32]:
+
+
+df.info()
+
 
 # In[12]:
 
@@ -136,6 +217,12 @@
 # 
 # **Create a list of 1 element containing the string 'purpose'. Call this list cat_feats.**
 
+# In[35]:
+
+
+cat_feats = ['purpose']
+
+
 # In[13]:
 
 
@@ -143,6 +230,12 @@
 
 
 # **Now use pd.get_dummies(loans,columns=cat_feats,drop_first=True) to create a fixed larger dataframe that has new feature columns with dummy variables. Set this dataframe as final_data.**
+
+# In[37]:
+
+
+df_dummy = pd.get_dummies(df, columns=cat_feats, drop_first=True)
+
 
 # In[14]:
 
@@ -160,7 +253,21 @@
 # 
 # Now its time to split our data into a training set and a testing set!
 # 
-# ** Use sklearn to split your data into a training set and a testing set as we've done in the past.**
+# **Use sklearn to split your data into a training set and a testing set as we've done in the past.**
+
+# In[52]:
+
+
+response = 'not.fully.paid'
+X = df_dummy.drop(response, axis=1)
+y = df_dummy[response]
+
+
+# In[53]:
+
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=101)
+
 
 # In[16]:
 
@@ -178,7 +285,7 @@
 # 
 # Let's start by training a single decision tree first!
 # 
-# ** Import DecisionTreeClassifier**
+# **Import DecisionTreeClassifier**
 
 # In[18]:
 
@@ -188,10 +295,22 @@ from sklearn.tree import DecisionTreeClassifier
 
 # **Create an instance of DecisionTreeClassifier() called dtree and fit it to the training data.**
 
+# In[54]:
+
+
+dtree = DecisionTreeClassifier()
+
+
 # In[19]:
 
 
 
+
+
+# In[55]:
+
+
+dtree.fit(X_train, y_train)
 
 
 # In[32]:
@@ -202,6 +321,24 @@ from sklearn.tree import DecisionTreeClassifier
 
 # ## Predictions and Evaluation of Decision Tree
 # **Create predictions from the test set and create a classification report and a confusion matrix.**
+
+# In[56]:
+
+
+pred_dtree = dtree.predict(X_test)
+
+
+# In[57]:
+
+
+print(confusion_matrix(y_test, pred_dtree))
+
+
+# In[58]:
+
+
+print(classification_report(y_test, pred_dtree))
+
 
 # In[21]:
 
@@ -233,6 +370,18 @@ from sklearn.tree import DecisionTreeClassifier
 # 
 # **Create an instance of the RandomForestClassifier class and fit it to our training data from the previous step.**
 
+# In[49]:
+
+
+rfc = RandomForestClassifier()
+
+
+# In[50]:
+
+
+rfc.fit(X_train, y_train)
+
+
 # In[25]:
 
 
@@ -255,7 +404,13 @@ from sklearn.tree import DecisionTreeClassifier
 # 
 # Let's predict off the y_test values and evaluate our model.
 # 
-# ** Predict the class of not.fully.paid for the X_test data.**
+# **Predict the class of not.fully.paid for the X_test data.**
+
+# In[60]:
+
+
+rfc_pred = rfc.predict(X_test)
+
 
 # In[28]:
 
@@ -264,6 +419,18 @@ from sklearn.tree import DecisionTreeClassifier
 
 
 # **Now create a classification report from the results. Do you get anything strange or some sort of warning?**
+
+# In[61]:
+
+
+print(confusion_matrix(y_test, rfc_pred))
+
+
+# In[62]:
+
+
+print(classification_report(y_test, rfc_pred))
+
 
 # In[29]:
 
@@ -287,10 +454,6 @@ from sklearn.tree import DecisionTreeClassifier
 
 # **What performed better the random forest or the decision tree?**
 
-# In[36]:
-
-
-
-
+# That depends. But the recall rate for both models is too low.
 
 # # Great Job!
