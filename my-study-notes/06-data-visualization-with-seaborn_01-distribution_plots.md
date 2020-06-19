@@ -3,20 +3,26 @@
 ## Distribution plots
 
 ```python
+
 import seaborn as sns
-%matplotlib inline
+import matplotlib.pyplot as plt
+# %matplotlib inline
+
 ```
 
 Load data
 
 ```python
+
 tips = sns.load_dataset('tips')
 tips.head()
+
 ```
 
 ### Histogram
 
 ```python
+
 sns.distplot(
     tips['total_bill'],
     bins=None,
@@ -35,22 +41,37 @@ sns.distplot(
     label=None,
     ax=None
     )
+    
+plt.show()
+    
 ```
 
 ### Joint plot
 
 ```python
+
 sns.jointplot(x='total_bill', y='tip', data=tips, kind='scatter')
+
+plt.show()
+
 ```
 
 ### Pair plot
 
 ```python
+
 sns.pairplot(tips, hue='sex')
+
+plt.show()
+
 ```
 
 ### Rug plot
 
 ```python
+
 sns.rugplot(tips['total_bill'])
+
+plt.show()
+
 ```

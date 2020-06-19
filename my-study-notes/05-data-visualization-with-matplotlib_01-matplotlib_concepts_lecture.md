@@ -3,9 +3,11 @@
 Documentation: https://matplotlib.org/
 
 ```python
+
 import matplotlib.pyplot as plt
-%matplotlib inline
+# %matplotlib inline
 import numpy as np
+
 ```
 
 Use `plt.show()` when you are not using Jupyter*, for example, when using a script like this:
@@ -28,8 +30,10 @@ The script will remain running until you close the window that shows the figure.
 ## Create data
 
 ```python
+
 x = np.linspace(0, 5, 11)
 y = x ** 2
+
 ```
 
 There are two methods to create plots using matplotlib: *i*) using functional programming and *ii*) using object oriented programming.
@@ -39,18 +43,26 @@ There are two methods to create plots using matplotlib: *i*) using functional pr
 See: https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot
 
 ```python
+
 plt.plot(x, y)
+
+plt.show()
+
 ```
 
 Changing the style: the sintaxe to change colors and markers is similar to MatLab.
 
 ```python
+
 plt.plot(x, y, 'r-')
 plt.plot(x, y, 'b-')
 plt.plot(x, y, 'ro')
 plt.plot(x, y, 'r+')
 plt.plot(x, y, 'r--')
 plt.plot(x, y, color = 'green', marker = 'o', linestyle = 'dashed', linewidth = 2, markersize = 12)
+
+plt.show()
+
 ```
 
 Adding basic labels

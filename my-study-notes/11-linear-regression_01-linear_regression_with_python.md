@@ -3,6 +3,7 @@
 Load libraries.
 
 ```python
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -12,12 +13,15 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.datasets import load_boston
 from sklearn import metrics
+
 ```
 
 Import data.
 
 ```python
-df = pd.read_csv('Refactored_Py_DS_ML_Bootcamp-master/11-Linear-Regression/USA_Housing.csv')
+
+df = pd.read_csv('../Refactored_Py_DS_ML_Bootcamp-master/11-Linear-Regression/USA_Housing.csv')
+
 ```
 
 Check data.
@@ -33,6 +37,8 @@ Simple plots.
 
 ```python
 sns.pairplot(df)
+plt.show()
+
 sns.distplot(df['Price'], kde=False)
 sns.heatmap(data=df.corr(), cmap='viridis', annot=True)
 ```

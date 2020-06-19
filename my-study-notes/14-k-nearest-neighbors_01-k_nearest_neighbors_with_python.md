@@ -35,6 +35,7 @@ It has two types of parameters:
 Load libraries
 
 ```python
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -45,19 +46,23 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report, confusion_matrix
+
 ```
 
 Load data
 
 ```python
+
 df = pd.read_csv('Refactored_Py_DS_ML_Bootcamp-master/14-K-Nearest-Neighbors/Classified Data', index_col=0)
 
 df.head()
 
 df.columns = map(str.lower, df.columns)
+
 df.columns = df.columns.str.replace(' ', '_')
 
 df.head()
+
 ```
 
 Preprocess data
@@ -65,6 +70,7 @@ Preprocess data
 > Because KNN predict/classify data by proximity, scaled data matters!
 
 ```python
+
 scaler = StandardScaler()
 scaler.fit(df.drop('target_class', axis=1))
 scaled_features = scaler.transform(df.drop('target_class', axis=1))
@@ -77,14 +83,17 @@ df_feat.mean().round()
 
 # check sd
 df_feat.std().round()
+
 ```
 
 Split data
 
 ```python
+
 X = df_feat
 y = df['target_class']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=101)
+
 ```
 
 Train data
@@ -104,25 +113,31 @@ Train data
 knn = KNeighborsClassifier(n_neighbors=1)
 
 knn.fit(X_train, y_train)
+
 ```
 
 Predict
 
 ```python
+
 pred = knn.predict(X_test)
+
 ```
 
 Evaluate
 
 ```python
+
 print(confusion_matrix(y_test, pred))
 
 print(classification_report(y_test, pred))
+
 ```
 
 Using the elbow method to choose the better *k* parameters
 
 ```python
+
 error_rate = []
 
 for i in range(1, 40):
@@ -136,11 +151,13 @@ plt.plot(range(1, 40), error_rate, color='blue', linestyle='dashed', marker='o',
 plt.title('Error rate vs K value')
 plt.xlabel('K')
 plt.ylabel('Error rate')
+
 ```
 
 Repeating the training with the best *k* value (17)
 
 ```python
+
 knn = KNeighborsClassifier(n_neighbors=17)
 knn.fit(X_train, y_train)
 
@@ -148,4 +165,5 @@ pred = knn.predict(X_test)
 
 print(confusion_matrix(y_test, pred))
 print(classification_report(y_test, pred))
+
 ```

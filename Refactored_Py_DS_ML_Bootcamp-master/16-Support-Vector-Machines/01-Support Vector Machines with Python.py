@@ -2,13 +2,13 @@
 # coding: utf-8
 
 # ___
-# 
+#
 # <a href='http://www.pieriandata.com'> <img src='../Pierian_Data_Logo.png' /></a>
 # ___
 # # Support Vector Machines with Python
-# 
+#
 # Welcome to the Support Vector Machines with Python Lecture Notebook! Remember to refer to the video lecture for the full background information on the code here!
-# 
+#
 # ## Import Libraries
 
 # In[51]:
@@ -18,11 +18,12 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-get_ipython().run_line_magic('matplotlib', 'inline')
+from sklearn.model_selection import train_test_split
+# get_ipython().run_line_magic('matplotlib', 'inline')
 
 
 # ## Get the Data
-# 
+#
 # We'll use the built in breast cancer dataset from Scikit Learn. We can get with the load function:
 
 # In[52]:
@@ -89,8 +90,8 @@ df.head()
 
 
 # # Exploratory Data Analysis
-# 
-# 
+#
+#
 
 # We'll skip the Data Viz part for this lecture since there are so many features that are hard to interpret if you don't have domain knowledge of cancer or tumor cells. In your project you will have more to visualize for the data.
 
@@ -129,7 +130,7 @@ model.fit(X_train,y_train)
 
 
 # ## Predictions and Evaluations
-# 
+#
 # Now let's predict using the trained model.
 
 # In[27]:
@@ -157,19 +158,23 @@ print(classification_report(y_test,predictions))
 
 
 # Woah! Notice that we are classifying everything into a single class! This means our model needs to have it parameters adjusted (it may also help to normalize the data).
-# 
+#
 # We can search for parameters using a GridSearch!
 
 # # Gridsearch
-# 
+#
 # Finding the right parameters (like what C or gamma values to use) is a tricky task! But luckily, we can be a little lazy and just try a bunch of combinations and see what works best! This idea of creating a 'grid' of parameters and just trying out all the possible combinations is called a Gridsearch, this method is common enough that Scikit-learn has this functionality built in with GridSearchCV! The CV stands for cross-validation which is the
-# 
-# GridSearchCV takes a dictionary that describes the parameters that should be tried and a model to train. The grid of parameters is defined as a dictionary, where the keys are the parameters and the values are the settings to be tested. 
+#
+# GridSearchCV takes a dictionary that describes the parameters that should be tried and a model to train. The grid of parameters is defined as a dictionary, where the keys are the parameters and the values are the settings to be tested.
 
 # In[63]:
 
 
-param_grid = {'C': [0.1,1, 10, 100, 1000], 'gamma': [1,0.1,0.01,0.001,0.0001], 'kernel': ['rbf']} 
+param_grid = {
+        'C': [0.1,1, 10, 100, 1000],
+        'gamma': [1,0.1,0.01,0.001,0.0001],
+        'kernel': ['rbf']
+        }
 
 
 # In[64]:

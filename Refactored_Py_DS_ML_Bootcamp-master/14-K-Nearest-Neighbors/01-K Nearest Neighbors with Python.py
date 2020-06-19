@@ -2,21 +2,21 @@
 # coding: utf-8
 
 # ___
-# 
+#
 # <a href='http://www.pieriandata.com'> <img src='../Pierian_Data_Logo.png' /></a>
 # ___
 
 # # K Nearest Neighbors with Python
-# 
-# You've been given a classified data set from a company! They've hidden the feature column names but have given you the data and the target classes. 
-# 
+#
+# You've been given a classified data set from a company! They've hidden the feature column names but have given you the data and the target classes.
+#
 # We'll try to use KNN to create a model that directly predicts a class for a new data point based off of the features.
-# 
+#
 # Let's grab it and use it!
 
 # ## Import Libraries
-# 
-# 
+#
+#
 
 # In[43]:
 
@@ -25,11 +25,11 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
-get_ipython().run_line_magic('matplotlib', 'inline')
+# get_ipython().run_line_magic('matplotlib', 'inline')
 
 
 # ## Get the Data
-# 
+#
 # Set index_col=0 to use the first column as the index.
 
 # In[74]:
@@ -45,7 +45,7 @@ df.head()
 
 
 # ## Standardize the Variables
-# 
+#
 # Because the KNN classifier predicts the class of a given test observation by identifying the observations that are nearest to it, the scale of the variables matters. Any variables that are on a large scale will have a much larger effect on the distance between the observations, and hence on the KNN classifier, than variables that are on a small scale.
 
 # In[78]:
@@ -95,7 +95,7 @@ X_train, X_test, y_train, y_test = train_test_split(scaled_features,df['TARGET C
 
 
 # ## Using KNN
-# 
+#
 # Remember that we are trying to come up with a model to predict whether someone will TARGET CLASS or not. We'll start with k=1.
 
 # In[85]:
@@ -123,7 +123,7 @@ pred = knn.predict(X_test)
 
 
 # ## Predictions and Evaluations
-# 
+#
 # Let's evaluate our KNN model!
 
 # In[89]:
@@ -145,7 +145,7 @@ print(classification_report(y_test,pred))
 
 
 # ## Choosing a K Value
-# 
+#
 # Let's go ahead and use the elbow method to pick a good K Value:
 
 # In[98]:
@@ -155,7 +155,7 @@ error_rate = []
 
 # Will take some time
 for i in range(1,40):
-    
+
     knn = KNeighborsClassifier(n_neighbors=i)
     knn.fit(X_train,y_train)
     pred_i = knn.predict(X_test)
@@ -208,5 +208,5 @@ print(classification_report(y_test,pred))
 
 
 # # Great job!
-# 
+#
 # We were able to squeeze some more performance out of our model by tuning to a better K value!

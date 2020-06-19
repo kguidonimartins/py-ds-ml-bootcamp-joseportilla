@@ -2,15 +2,15 @@
 # coding: utf-8
 
 # ___
-# 
+#
 # <a href='http://www.pieriandata.com'> <img src='../Pierian_Data_Logo.png' /></a>
 # ___
 # # Decision Trees and Random Forests in Python
 
 # This is the code for the lecture video which goes over tree methods in Python. Reference the video lecture for the full explanation of the code!
-# 
-# I also wrote a [blog post](https://medium.com/@josemarcialportilla/enchanted-random-forest-b08d418cb411#.hh7n1co54) explaining the general logic of decision trees and random forests which you can check out. 
-# 
+#
+# I also wrote a [blog post](https://medium.com/@josemarcialportilla/enchanted-random-forest-b08d418cb411#.hh7n1co54) explaining the general logic of decision trees and random forests which you can check out.
+#
 # ## Import Libraries
 
 # In[48]:
@@ -27,7 +27,6 @@ get_ipython().run_line_magic('matplotlib', 'inline')
 
 # In[8]:
 
-
 df = pd.read_csv('kyphosis.csv')
 
 
@@ -38,7 +37,7 @@ df.head()
 
 
 # ## EDA
-# 
+#
 # We'll just check out a simple pairplot for this small dataset.
 
 # In[27]:
@@ -46,9 +45,10 @@ df.head()
 
 sns.pairplot(df,hue='Kyphosis',palette='Set1')
 
+plt.show()
 
 # ## Train Test Split
-# 
+#
 # Let's split up the data into a training set and a test set!
 
 # In[13]:
@@ -71,7 +71,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30)
 
 
 # ## Decision Trees
-# 
+#
 # We'll start just by training a single decision tree.
 
 # In[10]:
@@ -92,8 +92,8 @@ dtree = DecisionTreeClassifier()
 dtree.fit(X_train,y_train)
 
 
-# ## Prediction and Evaluation 
-# 
+# ## Prediction and Evaluation
+#
 # Let's evaluate our decision tree.
 
 # In[17]:
@@ -121,16 +121,16 @@ print(confusion_matrix(y_test,predictions))
 
 
 # ## Tree Visualization
-# 
+#
 # Scikit learn actually has some built-in visualization capabilities for decision trees, you won't use this often and it requires you to install the pydot library, but here is an example of what it looks like and the code to execute this:
 
 # In[33]:
 
 
-from IPython.display import Image  
-from sklearn.externals.six import StringIO  
+from IPython.display import Image
+from sklearn.externals.six import StringIO
 from sklearn.tree import export_graphviz
-import pydot 
+import pydot
 
 features = list(df.columns[1:])
 features
@@ -139,15 +139,15 @@ features
 # In[39]:
 
 
-dot_data = StringIO()  
+dot_data = StringIO()
 export_graphviz(dtree, out_file=dot_data,feature_names=features,filled=True,rounded=True)
 
-graph = pydot.graph_from_dot_data(dot_data.getvalue())  
-Image(graph[0].create_png())  
+graph = pydot.graph_from_dot_data(dot_data.getvalue())
+Image(graph[0].create_png())
 
 
 # ## Random Forests
-# 
+#
 # Now let's compare the decision tree model to a random forest.
 
 # In[41]:
